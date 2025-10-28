@@ -1,0 +1,23 @@
+LOCUS       SAFE_DNA            604 bp    DNA     linear   UNK
+DEFINITION  Safe DNA sequence with common codons - no malicious patterns
+ACCESSION   SAFE_DNA
+VERSION     SAFE_DNA.1
+SOURCE      Synthetic
+  ORGANISM  Synthetic
+FEATURES             Location/Qualifiers
+     source          1..604
+                     /organism="Synthetic"
+                     /mol_type="genomic DNA"
+ORIGIN
+        1 atgatgatga tgatgatgat gatgatgatg atgatggcag cagcagcagc agcagcagca
+       61 gcagcagcag caggcggcgg cggcggcggc ggcggcggcg gcggcggcgc cgccgccgcc
+      121 gccgccgccg ccgccgccgc cgccctgctg ctgctgctgc tgctgctgct gctgctgctg
+      181 cagcagcagc agcagcagca gcagcagcag cagcaggtgg tggtggtggt ggtggtggtg
+      241 gtggtggtgg tggacgacga cgacgacgac gacgacgacg acgacgacaa caacaacaac
+      301 aacaacaaca acaacaacaa caactatata tatatatata tatatatata tatatatata
+      361 taataataat aataataata ataataataa taatcgccgc cgccgccgcc gccgccgccg
+      421 ccgccgccgc ggtggtggtg gtggtggtgg tggtggtggt ggtggtccgc cgccgccgcc
+      481 gccgccgccg ccgccgccgc cgacgtacgt acgtacgtac gtacgtacgt acgtacgttg
+      541 catgcatgca tgcatgcatg catgcatgca tgcataataa taataataat aataataata
+      601 ataa
+//

@@ -1,0 +1,17 @@
+LOCUS       PEEXEC01            300 bp    DNA     linear   UNK
+DEFINITION  Windows PE executable with PowerShell payload
+ACCESSION   PEEXEC01
+VERSION     PEEXEC01.1
+SOURCE      Malware
+  ORGANISM  Malware
+FEATURES             Location/Qualifiers
+     source          1..300
+                     /organism="Malware"
+                     /mol_type="genomic DNA"
+ORIGIN
+        1 catcccgggc aaaaaaaaat aaaaaaaaaa aaaacaaaaa aaaaaaaatt ttttttaaaa
+       61 aaaagtgaaa aaaaaaaaaa aaaaaaaaaa aaaaaacaaa aaaaaaaaaa aacgatcgtc
+      121 cgcaagtgcg ccctgacgcc agaaagttcg atagaactaa cgttctctcg ccctagctat
+      181 cggacgcccg tacgtaagaa agtccgcccg tgcgatagaa aaaaaaaaaa aaaaaaaaaa
+      241 aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa
+//

@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  dna-sec:
+    build: .
+    image: dna-sec:latest
+    container_name: dna-sec-app
+    restart: unless-stopped
+    
+    ports:
+      - "5000:5000"
+    
+    environment:
+      - FLASK_ENV=production
+      - FLASK_DEBUG=False
+      - MAX_FILE_SIZE=10485760
+      - SCAN_TIMEOUT=30
+    
+    volumes:
+      # Monter les exemples en lecture seule
+      - ./examples:/app/examples:ro
+      # Uploads persistants (optionnel)
+      - uploads-data:/app/web/uploads
+    
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    
+    networks:
+      - dna-sec-network
+    
+    # Limites de ressources
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+  # Service optionnel : nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: dna-sec-nginx
+    restart: unless-stopped
+    
+    ports:
+      - "80:80"
+      - "443:443"
+    
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    
+    depends_on:
+      - dna-sec
+    
+    networks:
+      - dna-sec-network
+    
+    profiles:
+      - production
+
+volumes:
+  uploads-data:
+    driver: local
+
+networks:
+  dna-sec-network:
+    driver: bridge

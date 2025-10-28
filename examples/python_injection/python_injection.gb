@@ -1,0 +1,20 @@
+LOCUS       PYINJCT01           436 bp    DNA     linear   UNK
+DEFINITION  Python eval() code injection exploit
+ACCESSION   PYINJCT01
+VERSION     PYINJCT01.1
+SOURCE      Malware
+  ORGANISM  Malware
+FEATURES             Location/Qualifiers
+     source          1..436
+                     /organism="Malware"
+                     /mol_type="genomic DNA"
+ORIGIN
+        1 cgccctcgcg accgtaagga cgatcgttcg tcctaacggc cgtacgccag gaccttcctt
+       61 cggccgtcct aacgttctag ctcaccttcc ttaggaagct cgagcgacct atcgccatcg
+      121 atcaagctag gcagtgcgag atcgatcacg cacgcccgat cgttcgcacg ccaggaagct
+      181 cgacccctat acctctcgag atatcaggat aacagccact atgcctggca ttatagatgc
+      241 ctggcatacg tgcatgatcc cgatatatcc agcgtacgag ccatcgctcg gccataatag
+      301 caggctaacg agcggcatgc ctggcgacca atcagcctaa agctaggcag taagaaagct
+      361 attactatct cactagcggc cgtgcgctat tgagctagta agaaagctcg ccctgacgcc
+      421 cgatagctag gcaggc
+//

@@ -1,0 +1,16 @@
+LOCUS       CMDINJCT01          196 bp    DNA     linear   UNK
+DEFINITION  Bash reverse shell command injection
+ACCESSION   CMDINJCT01
+VERSION     CMDINJCT01.1
+SOURCE      Malware
+  ORGANISM  Malware
+FEATURES             Location/Qualifiers
+     source          1..196
+                     /organism="Malware"
+                     /mol_type="genomic DNA"
+ORIGIN
+        1 agttcgagcg gccgtgagtt cgagcgacct atcggaagaa agtccgatag aaagctcgat
+       61 ctccctagcg taagaacgga ctcactcact aaatggagtt agttcgccct cgcggccgta
+      121 agtgcgatcg ttcgtcagtt ctatcggacg cccgtacgta agtgctatcg gaagaactta
+      181 agaactatcg gaagct
+//

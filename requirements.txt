@@ -1,0 +1,15 @@
+# Core dependencies
+biopython>=1.80
+click>=8.0
+flask>=2.3.0
+werkzeug>=2.3.0
+
+# Testing dependencies
+pytest>=7.0.0
+pytest-cov>=4.0.0
+
+# Optional: YARA for advanced malware detection
+# Uncomment the line below to enable YARA (may require Visual C++ on Windows)
+# yara-python>=4.3.0
+# Installation: pip install yara-python
+# Or use: pip install -r requirements.txt && pip install yara-python

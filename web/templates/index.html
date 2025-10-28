@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNA-Sec | Détection de malware dans les séquences ADN</title>
+    
+    <!-- Google Fonts - Modern Tech Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <!-- Tailwind config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'cyber-green': '#10b981',
+                        'cyber-blue': '#3b82f6',
+                        'cyber-purple': '#8b5cf6',
+                        'cyber-pink': '#ec4899',
+                        'dark-bg': '#0f172a',
+                        'dark-card': '#1e293b',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-dark-bg text-gray-100 min-h-screen font-sans">
+    <!-- DNA Animation Background with Floating Particles -->
+    <div class="dna-background" id="dna-canvas"></div>
+    
+    <div class="container mx-auto px-4 py-8 relative z-10" x-data="dnaSec()">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <div class="inline-block">
+                <h1 class="text-5xl font-bold mb-4 cyber-glow tracking-tight">
+                    <span class="text-cyber-green font-sans">DNA</span><span class="text-cyber-blue font-sans">-Sec</span>
+                </h1>
+                <p class="text-xl text-gray-400 mb-2 font-light">Détection de malware dans les séquences ADN</p>
+                <div class="h-1 w-full bg-gradient-to-r from-cyber-green via-cyber-blue to-cyber-purple rounded-full glow-pulse"></div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="max-w-4xl mx-auto">
+            <!-- Upload Zone -->
+            <div class="bg-dark-card rounded-2xl p-8 mb-8 border border-cyber-green/20 shadow-2xl card-glow"
+                 x-show="!scanning && !report"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 transform scale-95"
+                 x-transition:enter-end="opacity-100 transform scale-100">
+                
+                <h2 class="text-2xl font-bold mb-6 text-cyber-blue">📤 Téléverser une séquence ADN</h2>
+                
+                <!-- Drag & Drop Zone -->
+                <div class="border-2 border-dashed rounded-xl p-12 text-center transition-all duration-300"
+                     :class="isDragging ? 'border-cyber-green bg-cyber-green/10 scale-105' : 'border-gray-600 hover:border-cyber-blue'"
+                     @drop.prevent="handleDrop"
+                     @dragover.prevent="isDragging = true"
+                     @dragleave.prevent="isDragging = false"
+                     @click="$refs.fileInput.click()">
+                    
+                    <div class="mb-4" x-show="!selectedFile">
+                        <!-- Modern Upload Icon with Gradient -->
+                        <div class="relative w-24 h-24 mx-auto mb-6">
+                            <!-- Outer Circle with Gradient Border -->
+                            <div class="absolute inset-0 rounded-full bg-gradient-to-br from-cyber-green via-cyber-blue to-cyber-purple opacity-20 blur-xl animate-pulse"></div>
+                            <div class="relative w-24 h-24 rounded-full bg-gradient-to-br from-cyber-green/10 to-cyber-blue/10 border-2 border-cyber-green/30 flex items-center justify-center backdrop-blur-sm">
+                                <svg class="w-12 h-12 text-cyber-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <!-- Cloud Base -->
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3-3m0 0l3 3m-3-3v8"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-xl mb-2 text-gray-300">
+                            <span class="text-cyber-green font-bold">Déposez votre fichier</span> ou cliquez pour parcourir
+                        </p>
+                        <p class="text-sm text-gray-500">FASTA, GenBank (.fasta, .fa, .fna, .gb, .gbk) - Max 10Mo</p>
+                    </div>
+                    
+                    <div x-show="selectedFile" class="text-left">
+                        <div class="flex items-center justify-between bg-dark-bg/50 rounded-lg p-4">
+                            <div class="flex items-center">
+                                <svg class="w-8 h-8 mr-3 text-cyber-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <div>
+                                    <p class="font-semibold text-cyber-green" x-text="selectedFile?.name"></p>
+                                    <p class="text-sm text-gray-500" x-text="formatFileSize(selectedFile?.size)"></p>
+                                </div>
+                            </div>
+                            <button @click.stop="selectedFile = null" class="text-red-500 hover:text-red-400 transition">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <input type="file" 
+                           x-ref="fileInput" 
+                           @change="handleFileSelect"
+                           accept=".fasta,.fa,.fna,.gb,.gbk,.genbank"
+                           class="hidden">
+                </div>
+                
+                <!-- Error Message -->
+                <div x-show="error" 
+                     x-transition
+                     class="mt-4 bg-red-900/30 border border-red-500 rounded-lg p-4 text-red-300">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span x-text="error"></span>
+                    </div>
+                </div>
+                
+                <!-- Scan Button -->
+                <button @click="scanFile"
+                        :disabled="!selectedFile"
+                        class="mt-6 w-full bg-gradient-to-r from-cyber-green to-cyber-blue text-dark-bg font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-lg btn-glow">
+                    <span class="text-lg">🔬 Analyser la séquence ADN</span>
+                </button>
+            </div>
+
+            <!-- Scanning Animation -->
+            <div x-show="scanning"
+                 x-transition
+                 class="bg-dark-card rounded-2xl p-12 mb-8 border border-cyber-blue/20 shadow-2xl text-center">
+                <div class="dna-spinner mb-6"></div>
+                <h3 class="text-2xl font-bold text-cyber-blue mb-2">Analyse de la séquence ADN...</h3>
+                <p class="text-gray-400">Recherche de patterns malveillants</p>
+                <div class="mt-6 w-full bg-dark-bg rounded-full h-2 overflow-hidden">
+                    <div class="progress-bar h-full bg-gradient-to-r from-cyber-green to-cyber-blue"></div>
+                </div>
+            </div>
+
+            <!-- Report -->
+            <div x-show="report"
+                 x-transition:enter="transition ease-out duration-500"
+                 x-transition:enter-start="opacity-0 transform translate-y-10"
+                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                 class="bg-dark-card rounded-2xl p-8 border border-cyber-purple/20 shadow-2xl">
+                
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-cyber-purple">📊 Rapport d'analyse</h2>
+                    <button @click="reset" class="text-gray-400 hover:text-cyber-green transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- File Info -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-dark-bg/50 rounded-lg p-4">
+                        <p class="text-xs text-gray-500 mb-1">Nom du fichier</p>
+                        <p class="font-semibold text-cyber-blue" x-text="report?.filename"></p>
+                    </div>
+                    <div class="bg-dark-bg/50 rounded-lg p-4">
+                        <p class="text-xs text-gray-500 mb-1">Longueur de séquence</p>
+                        <p class="font-semibold text-cyber-green" x-text="report?.sequence_length?.toLocaleString() + ' bp'"></p>
+                    </div>
+                    <div class="bg-dark-bg/50 rounded-lg p-4">
+                        <p class="text-xs text-gray-500 mb-1">Temps d'analyse</p>
+                        <p class="font-semibold text-cyber-purple" x-text="report?.scan_time + 's'"></p>
+                    </div>
+                </div>
+
+                <!-- Risk Score -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold">Score de risque</h3>
+                        <span class="text-3xl font-bold"
+                              :class="getRiskColor(report?.risk_score)"
+                              x-text="report?.risk_score + '/100'"></span>
+                    </div>
+                    <div class="w-full bg-dark-bg rounded-full h-4 overflow-hidden">
+                        <div class="h-full transition-all duration-1000 rounded-full"
+                             :class="getRiskGradient(report?.risk_score)"
+                             :style="`width: ${report?.risk_score}%`"></div>
+                    </div>
+                    <p class="mt-2 text-sm" 
+                       :class="getRiskColor(report?.risk_score)"
+                       x-text="getRiskLabel(report?.risk_score)"></p>
+                </div>
+
+                <!-- Recommendation -->
+                <div class="bg-dark-bg/50 border-l-4 rounded-r-lg p-4 mb-6"
+                     :class="report?.risk_score > 50 ? 'border-red-500' : 'border-green-500'">
+                    <h4 class="font-bold mb-2 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                        </svg>
+                        Recommandation
+                    </h4>
+                    <p class="text-gray-300" x-text="report?.recommendation"></p>
+                </div>
+
+                <!-- Findings -->
+                <div x-show="report?.findings?.length > 0">
+                    <h3 class="text-lg font-bold mb-4 text-red-400">⚠️ Menaces détectées (<span x-text="report?.findings?.length"></span>)</h3>
+                    <div class="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
+                        <template x-for="(finding, index) in report?.findings" :key="index">
+                            <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-4 hover:border-red-500 transition">
+                                <!-- Header -->
+                                <div class="flex items-start justify-between mb-3">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <span class="font-bold text-red-400" x-text="finding.rule"></span>
+                                            <span class="text-xs px-2 py-1 rounded-full"
+                                                  :class="{
+                                                      'bg-red-500 text-white': finding.severity === 'critical',
+                                                      'bg-orange-500 text-white': finding.severity === 'high',
+                                                      'bg-yellow-500 text-black': finding.severity === 'medium'
+                                                  }"
+                                                  x-text="finding.severity === 'critical' ? '🔴 CRITIQUE' : 
+                                                          finding.severity === 'high' ? '🟠 ÉLEVÉ' : '🟡 MOYEN'">
+                                            </span>
+                                        </div>
+                                        <p class="text-xs text-gray-500">
+                                            Frame <span x-text="finding.frame"></span> | 
+                                            Offset <span x-text="finding.offset"></span> | 
+                                            <span x-text="finding.matched_bytes"></span> bytes
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Explanation -->
+                                <div class="bg-dark-bg/50 rounded-lg p-3 mb-3" x-show="finding.explanation">
+                                    <p class="text-sm text-gray-300 mb-2">
+                                        <span class="text-cyan-400 font-semibold">📚 Explication:</span>
+                                        <span x-text="finding.explanation"></span>
+                                    </p>
+                                    <p class="text-sm text-orange-300" x-show="finding.impact">
+                                        <span class="font-semibold">⚡ Impact:</span>
+                                        <span x-text="finding.impact"></span>
+                                    </p>
+                                </div>
+
+                                <!-- Technical Details -->
+                                <div class="space-y-2">
+                                    <!-- DNA Snippet -->
+                                    <div x-show="finding.dna_snippet" class="bg-dark-bg/70 rounded p-2">
+                                        <p class="text-xs text-gray-400 mb-1">🧬 ADN détecté:</p>
+                                        <p class="font-mono text-xs text-green-400 break-all" x-text="finding.dna_snippet"></p>
+                                    </div>
+
+                                    <!-- Hexadecimal -->
+                                    <div x-show="finding.matched_hex" class="bg-dark-bg/70 rounded p-2">
+                                        <p class="text-xs text-gray-400 mb-1">🔢 Hexadécimal:</p>
+                                        <p class="font-mono text-xs text-blue-400 break-all" x-text="finding.matched_hex"></p>
+                                    </div>
+
+                                    <!-- ASCII if available -->
+                                    <div x-show="finding.matched_ascii" class="bg-dark-bg/70 rounded p-2">
+                                        <p class="text-xs text-gray-400 mb-1">📝 ASCII:</p>
+                                        <p class="font-mono text-xs text-yellow-400 break-all" x-text="finding.matched_ascii"></p>
+                                    </div>
+
+                                    <!-- Technical Detail -->
+                                    <div x-show="finding.technical_detail" class="bg-dark-bg/70 rounded p-2 border-l-2 border-purple-500">
+                                        <p class="text-xs text-gray-400 mb-1">🔬 Détail technique:</p>
+                                        <p class="text-xs text-purple-300" x-text="finding.technical_detail"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div x-show="!report?.findings || report?.findings?.length === 0" class="text-center py-8">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p class="text-xl text-green-500 font-bold">Aucune menace détectée</p>
+                    <p class="text-gray-400 mt-2">Cette séquence ADN semble propre</p>
+                </div>
+
+                <!-- New Scan Button -->
+                <button @click="reset"
+                        class="mt-6 w-full bg-gradient-to-r from-cyber-purple to-cyber-pink text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    🔄 Analyser un autre fichier
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            <p>DNA-Sec v0.1.0 | Détection sécurisée de malware dans l'ADN</p>
+            <p class="mt-2">🔒 Aucun stockage persistant | ⏱️ Nettoyage auto 5min | 📁 Max 10Mo</p>
+        </footer>
+    </div>
+
+    <script>
+        function dnaSec() {
+            return {
+                selectedFile: null,
+                isDragging: false,
+                scanning: false,
+                report: null,
+                error: null,
+
+                handleFileSelect(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.selectedFile = file;
+                        this.error = null;
+                    }
+                },
+
+                handleDrop(event) {
+                    this.isDragging = false;
+                    const file = event.dataTransfer.files[0];
+                    if (file) {
+                        this.selectedFile = file;
+                        this.error = null;
+                    }
+                },
+
+                formatFileSize(bytes) {
+                    if (!bytes) return '0 Octets';
+                    const k = 1024;
+                    const sizes = ['Octets', 'Ko', 'Mo'];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+                },
+
+                async scanFile() {
+                    if (!this.selectedFile) return;
+
+                    this.scanning = true;
+                    this.error = null;
+                    this.report = null;
+
+                    const formData = new FormData();
+                    formData.append('file', this.selectedFile);
+
+                    try {
+                        const response = await fetch('/api/scan', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            throw new Error(data.error || 'Scan failed');
+                        }
+
+                        this.report = data;
+                    } catch (err) {
+                        this.error = err.message;
+                    } finally {
+                        this.scanning = false;
+                    }
+                },
+
+                getRiskColor(score) {
+                    if (score >= 80) return 'text-red-500';
+                    if (score >= 50) return 'text-orange-500';
+                    if (score >= 30) return 'text-yellow-500';
+                    return 'text-green-500';
+                },
+
+                getRiskGradient(score) {
+                    if (score >= 80) return 'bg-gradient-to-r from-red-600 to-red-400';
+                    if (score >= 50) return 'bg-gradient-to-r from-orange-600 to-orange-400';
+                    if (score >= 30) return 'bg-gradient-to-r from-yellow-600 to-yellow-400';
+                    return 'bg-gradient-to-r from-green-600 to-green-400';
+                },
+
+                getRiskLabel(score) {
+                    if (score >= 80) return '🔴 MENACE CRITIQUE';
+                    if (score >= 50) return '🟠 RISQUE ÉLEVÉ';
+                    if (score >= 30) return '🟡 RISQUE MOYEN';
+                    if (score > 0) return '🟢 RISQUE FAIBLE';
+                    return '✅ SÛRE';
+                },
+
+                reset() {
+                    this.selectedFile = null;
+                    this.scanning = false;
+                    this.report = null;
+                    this.error = null;
+                }
+            }
+        }
+
+        // DNA Particle Animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('dna-canvas');
+            const particles = [];
+            const helixes = [];
+
+            // Create DNA particles (letters A, T, C, G)
+            const bases = ['A', 'T', 'C', 'G'];
+            const colors = ['#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
+
+            // Generate floating base letters
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                const base = bases[Math.floor(Math.random() * bases.length)];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                particle.textContent = base;
+                particle.style.position = 'absolute';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.color = color;
+                particle.style.fontSize = (Math.random() * 15 + 12) + 'px';
+                particle.style.fontWeight = 'bold';
+                particle.style.opacity = '0';
+                particle.style.animation = `particle-float ${Math.random() * 20 + 15}s linear infinite`;
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.textShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+                particle.style.pointerEvents = 'none';
+                
+                canvas.appendChild(particle);
+            }
+
+            // Create realistic DNA double helix structures
+            function createDNAHelix(x, y, height, speed) {
+                const helixContainer = document.createElement('div');
+                helixContainer.style.position = 'absolute';
+                helixContainer.style.left = x + '%';
+                helixContainer.style.top = y + '%';
+                helixContainer.style.width = '60px';
+                helixContainer.style.height = height + 'px';
+                helixContainer.style.pointerEvents = 'none';
+                
+                // Create the two strands of the helix
+                const strand1Dots = [];
+                const strand2Dots = [];
+                const connections = [];
+                const numPairs = Math.floor(height / 20);
+                
+                for (let i = 0; i < numPairs; i++) {
+                    const yPos = (i / numPairs) * height;
+                    const angle = (i / numPairs) * Math.PI * 4; // 2 full rotations
+                    
+                    // Strand 1 (left spiral)
+                    const dot1 = document.createElement('div');
+                    dot1.className = 'helix-dot';
+                    dot1.style.position = 'absolute';
+                    dot1.style.width = '8px';
+                    dot1.style.height = '8px';
+                    dot1.style.borderRadius = '50%';
+                    dot1.style.background = colors[0];
+                    dot1.style.boxShadow = `0 0 10px ${colors[0]}, 0 0 20px ${colors[0]}`;
+                    dot1.style.left = (Math.sin(angle) * 20 + 26) + 'px';
+                    dot1.style.top = yPos + 'px';
+                    dot1.style.animation = `helix-pulse ${speed}s ease-in-out infinite`;
+                    dot1.style.animationDelay = (i * 0.1) + 's';
+                    
+                    // Strand 2 (right spiral)
+                    const dot2 = document.createElement('div');
+                    dot2.className = 'helix-dot';
+                    dot2.style.position = 'absolute';
+                    dot2.style.width = '8px';
+                    dot2.style.height = '8px';
+                    dot2.style.borderRadius = '50%';
+                    dot2.style.background = colors[1];
+                    dot2.style.boxShadow = `0 0 10px ${colors[1]}, 0 0 20px ${colors[1]}`;
+                    dot2.style.left = (Math.sin(angle + Math.PI) * 20 + 26) + 'px';
+                    dot2.style.top = yPos + 'px';
+                    dot2.style.animation = `helix-pulse ${speed}s ease-in-out infinite`;
+                    dot2.style.animationDelay = (i * 0.1 + 0.5) + 's';
+                    
+                    // Connection between strands (base pairs)
+                    if (i % 2 === 0) {
+                        const connection = document.createElement('div');
+                        connection.style.position = 'absolute';
+                        connection.style.height = '2px';
+                        connection.style.background = `linear-gradient(90deg, ${colors[0]}, ${colors[2]}, ${colors[1]})`;
+                        connection.style.top = (yPos + 3) + 'px';
+                        connection.style.left = (Math.sin(angle) * 20 + 26) + 'px';
+                        connection.style.width = Math.abs(Math.sin(angle) - Math.sin(angle + Math.PI)) * 20 + 'px';
+                        connection.style.opacity = '0.3';
+                        connection.style.animation = `connection-fade ${speed}s ease-in-out infinite`;
+                        connection.style.animationDelay = (i * 0.1) + 's';
+                        helixContainer.appendChild(connection);
+                    }
+                    
+                    helixContainer.appendChild(dot1);
+                    helixContainer.appendChild(dot2);
+                }
+                
+                // Animate the entire helix
+                helixContainer.style.animation = `helix-float ${speed * 2}s ease-in-out infinite`;
+                
+                return helixContainer;
+            }
+
+            // Generate multiple DNA helixes at different positions
+            const helixPositions = [
+                { x: 10, y: 10, height: 200, speed: 4 },
+                { x: 75, y: 15, height: 180, speed: 5 },
+                { x: 40, y: 60, height: 220, speed: 4.5 },
+                { x: 85, y: 70, height: 150, speed: 3.5 },
+                { x: 20, y: 50, height: 190, speed: 4.2 }
+            ];
+
+            helixPositions.forEach(pos => {
+                const helix = createDNAHelix(pos.x, pos.y, pos.height, pos.speed);
+                canvas.appendChild(helix);
+            });
+        });
+
+        // Enhanced CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes helix-float {
+                0%, 100% { 
+                    transform: translateY(0) rotate(0deg);
+                    opacity: 0.4;
+                }
+                50% { 
+                    transform: translateY(-30px) rotate(5deg);
+                    opacity: 0.7;
+                }
+            }
+            
+            @keyframes helix-pulse {
+                0%, 100% { 
+                    transform: scale(1);
+                    opacity: 0.6;
+                }
+                50% { 
+                    transform: scale(1.3);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes connection-fade {
+                0%, 100% { 
+                    opacity: 0.2;
+                }
+                50% { 
+                    opacity: 0.5;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+LOCUS       POLYGLOT01          152 bp    DNA     linear   UNK
+DEFINITION  Polyglot malware: PE + shellcode + command injection
+ACCESSION   POLYGLOT01
+VERSION     POLYGLOT01.1
+SOURCE      Malware
+  ORGANISM  Malware
+FEATURES             Location/Qualifiers
+     source          1..152
+                     /organism="Malware"
+                     /mol_type="genomic DNA"
+ORIGIN
+        1 catcccgggc aagcaaatac taaatttttg catatcgaaa ctatctgcct atctcacgcc
+       61 cgtcaggaag ctctagcgtc agaaagtcct agcgcgagaa agttagctag gcaaaaaaaa
+      121 aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aa
+//

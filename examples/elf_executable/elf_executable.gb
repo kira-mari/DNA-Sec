@@ -1,0 +1,14 @@
+LOCUS       ELFEXEC01           100 bp    DNA     linear   UNK
+DEFINITION  Linux ELF executable with embedded shellcode
+ACCESSION   ELFEXEC01
+VERSION     ELFEXEC01.1
+SOURCE      Malware
+  ORGANISM  Malware
+FEATURES             Location/Qualifiers
+     source          1..100
+                     /organism="Malware"
+                     /mol_type="genomic DNA"
+ORIGIN
+        1 ctttcaccca tacacgaaac aaacaaacaa aaatactcgt atactagccg ggaagtccga
+       61 tatcgaaaag ttcgagcggc cgtgagttct atcggaaaaa
+//

@@ -1,0 +1,14 @@
+LOCUS       SHELLCODE01         100 bp    DNA     linear   UNK
+DEFINITION  x86 shellcode for execve /bin/sh syscall
+ACCESSION   SHELLCODE01
+VERSION     SHELLCODE01.1
+SOURCE      Malware
+  ORGANISM  Malware
+FEATURES             Location/Qualifiers
+     source          1..100
+                     /organism="Malware"
+                     /mol_type="genomic DNA"
+ORIGIN
+        1 atactaaacc aacggaagtt agttctatcg gacggaagtt cgagcggccg tggagctgat
+       61 ccaaccatga gctgacatac tcaggtaaaa gttatcgaaa
+//
