@@ -36,7 +36,7 @@ DNA-Sec est un scanner de sécurité qui analyse les séquences ADN pour détect
 - ✅ **Décode** l'ADN en données binaires (A=00, C=01, G=10, T=11)
 - ✅ **Scanne** avec YARA pour détecter shellcode, exécutables, commandes système
 - ✅ **Génère** des rapports JSON avec score de risque
-- 🌐 **Interface web** moderne avec design cyberpunk-bio
+- 🌐 **Interface web** moderne 
 - 🐳 **Docker ready** pour déploiement facile
 
 ### Cas d'usage
@@ -54,8 +54,8 @@ DNA-Sec est un scanner de sécurité qui analyse les séquences ADN pour détect
 
 ```bash
 # Cloner le projet
-git clone https://github.com/votre-repo/DNA.git
-cd DNA
+git clone https://github.com/kira-mari/DNA-Sec.git
+cd DNA-Sec
 
 # Installer les dépendances
 pip install -r requirements.txt
@@ -90,8 +90,8 @@ python app_demo.py
 
 ```bash
 # 1. Cloner le repository
-git clone https://github.com/votre-repo/DNA.git
-cd DNA
+git clone https://github.com/kira-mari/DNA-Sec.git
+cd DNA-Sec
 
 # 2. Créer un environnement virtuel (recommandé)
 python -m venv .venv
@@ -545,7 +545,7 @@ DNA/
 │   ├── app.py                 # Serveur Flask (avec YARA)
 │   ├── app_demo.py            # Serveur Flask (DEMO sans YARA)
 │   ├── templates/
-│   │   └── index.html         # Frontend cyberpunk
+│   │   └── index.html         # Frontend 
 │   ├── static/
 │   │   └── style.css          # Animations CSS
 │   └── uploads/               # Fichiers temporaires
@@ -840,9 +840,9 @@ Les contributions sont les bienvenues ! Consultez [CONTRIBUTING.md](CONTRIBUTING
 ### Quick Start Contribution
 
 ```bash
-# 1. Forker le projet
+# 1. Forker le projet sur GitHub
 # 2. Cloner votre fork
-git clone https://github.com/VOTRE_USERNAME/DNA.git
+git clone https://github.com/VOTRE_USERNAME/DNA-Sec.git
 
 # 3. Créer une branche
 git checkout -b feature/ma-fonctionnalite
@@ -879,7 +879,7 @@ git push origin feature/ma-fonctionnalite
 
 Made with 💚 and ⚡
 
-[![GitHub](https://img.shields.io/badge/GitHub-DNA--Sec-181717?logo=github)](https://github.com/votre-repo/DNA)
+[![GitHub](https://img.shields.io/badge/GitHub-DNA--Sec-181717?logo=github)](https://github.com/kira-mari/DNA-Sec)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python)](https://python.org)
 
 </div>
