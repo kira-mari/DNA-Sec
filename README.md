@@ -272,9 +272,7 @@ Ouvrir dans le navigateur : **http://localhost:5000**
 #### Fonctionnalités web
 
 - 📤 **Drag & Drop** de fichiers FASTA/GenBank
-- 🧬 **Animation ADN** pendant le scan
-- 📊 **Rapport visuel** avec score coloré
-- 🎨 **Design cyberpunk-bio** (noir, vert néon, bleu électrique)
+- 📊 **Rapport visuel** avec score 
 - 🔒 **Sécurité** : timeout 30s, max 10MB, auto-cleanup 5min
 - 🚫 **Pas de stockage persistant** (tout en mémoire)
 
