@@ -109,14 +109,9 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-### Installation complète (avec YARA)
+### Installation de YARA (optionnel)
 
-YARA est **optionnel** mais recommandé pour une détection complète.
-
-```bash
-# Installer toutes les dépendances (incluant YARA)
-pip install -r requirements-full.txt
-```
+YARA est **optionnel** mais recommandé pour une détection complète. Si YARA n'est pas installé, DNA-Sec utilisera un scanner de fallback.
 
 **Installation de YARA par plateforme :**
 
