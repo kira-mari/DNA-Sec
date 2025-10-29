@@ -1,10 +1,16 @@
-# 🧬 DNA-Sec
+<div align="center">
+  <img src="LOGO.png" alt="DNA-Sec Logo" width="400"/>
+</div>
+
+<div align="center">
 
 **Détection de malware dans les séquences ADN** - Outil de cybersécurité pour analyser les fichiers FASTA et GenBank à la recherche de code malveillant encodé.
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED)](Dockerfile)
+
+</div>
 
 ---
 
